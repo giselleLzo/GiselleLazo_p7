@@ -6,6 +6,7 @@ var jwtUtils = require('../utils/jwt.utils');
 //Constants
 const TITLE_LIMIT = 2;
 const CONTENT_LIMIT = 4;
+const ITEMS_LIMIT = 50;
 
 //Routes
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
 
-        if (title.length <= 2 || content.length <= 4) {
+        if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
             return res.status(400).json({ 'error': 'invalid parameters' });
         }
 
@@ -61,6 +62,33 @@ module.exports = {
         });
     },
     listMessages: function(req, res) {
+        var fields = req.query.fields;
+        var limit = parseInt(req.query.limit);
+        var offset = parseInt(req.query.offset);
+        var order = req.query.order;
 
+        if (limit > ITEMS_LIMIT) {
+            limit = ITEMS_LIMIT;
+        }
+
+        models.Message.findAll({
+            order: [(order !=null) ? order.split(':') : ['title', 'ASC']],
+            attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+            limit: (!isNaN(limit)) ? limit : null,
+            offset: (!isNaN(offset)) ? offset : null,
+            include: [{
+                model: models.User,
+                attributes: [ 'username' ]
+            }]
+        }).then(function(messages) {
+            if (messages) {
+                res.status(200).json(messages);
+            } else {
+                res.status(404).json({ "error": "no messages found" });
+            }
+        }).catch(function(err) {
+            console.log(err);
+            res.status(500).json({ "error": "invalid fields" });
+        });
     } 
 }

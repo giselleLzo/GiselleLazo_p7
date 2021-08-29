@@ -1,6 +1,8 @@
 var jwt = require('jsonwebtoken');
 
-const JWT_SIGN_SECRET = 'dfhj84jdwkfur43odmtho5kd0ub7m290tdjti74vjd4rfv7ytfdcc02ser3';
+require('dotenv').config();
+
+const JWT_SIGN_SECRET = process.env.TOKEN;
 
 //Exported functions
 module.exports = {
@@ -18,15 +20,27 @@ module.exports = {
         return (authorization != null) ? authorization.replace('Bearer ', '') : null;
     },
     getUserId: function(authorization) {
-        var userId = -1;
-        var token = module.exports.parseAuthorization(authorization);
+        let userId = -1;
+        let token = module.exports.parseAuthorization(authorization);
         if(token != null) {
             try {
-                var jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
+                let jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
                 if(jwtToken != null)
                 userId = jwtToken.userId;
             } catch(err) { }
         }
         return userId;
-    }
+    },
+    getAdmin: function(authorization) {
+        let isAdmin = -1;
+        let token = module.exports.parseAuthorization(authorization);
+        if(token != null) {
+            try {
+                let jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
+                if(jwtToken != null)
+                isAdmin = jwtToken.isAdmin;
+            } catch(err) { }
+        }
+        return isAdmin;
+    },
 }

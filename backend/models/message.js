@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasMany(models.Comment);
+
       models.Message.belongsTo(models.User, {
+        onDelete: 'cascade',
         foreignKey: {
           allowNull:false
         }
@@ -19,10 +22,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Message.init({
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        min: 3,
+        notEmpty: true,
+      }
+    },
+    content: {
+      type: DataTypes.STRING,
+      validate: {
+        min: 5,
+        notEmpty: true,
+      }
+    },
     attachment: DataTypes.STRING,
-    likes: DataTypes.INTEGER
+    username: {
+      type: DataTypes.STRING,
+      references: {
+        model: 'User',
+        key: 'username'
+      }
+    },
   }, {
     sequelize,
     modelName: 'Message',

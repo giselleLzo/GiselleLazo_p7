@@ -16,39 +16,39 @@ exports.createComment = async (req, res, next) => {
     const comment = req.body.comment;
 
     await models.User.findOne({
-        where: {id: userId}
+        where: { id: userId }
     })
-    .then(async function(user) {
-        if(user){
-            let newComment = await models.Comment.create({
-                userId: userId,
-                postId: req.params.postId,
-                username: user.username,
-                comment: comment,
-            });
-            return res.status(201).json({ newComment: newComment });
-        }else {
-            return res.status(404).json({ 'error': 'User not found' })
-        }
-    }).catch(function(error) {
-        return res.status(500).json({ error });
-    });
+        .then(async function (user) {
+            if (user) {
+                let newComment = await models.Comment.create({
+                    userId: userId,
+                    postId: req.params.postId,
+                    username: user.username,
+                    comment: comment,
+                });
+                return res.status(201).json({ newComment: newComment });
+            } else {
+                return res.status(404).json({ 'error': 'User not found' })
+            }
+        }).catch(function (error) {
+            return res.status(500).json({ error });
+        });
 }
 
 exports.getAllComment = (req, res) => {
     models.Comment.findAll({
-        attributes: ['PostId'],
+        attributes: ['postId'],
     })
-    .then(function(comments) {
-        if(comments){
-            res.status(200).json({ comments: comments });
-        }else {
-            res.status(404).json({ 'error': 'Post not found' });
-        }
-    }).catch(function(err) {
-        console.log(err);
-        res.status(500).json({ 'error': err });
-    });
+        .then(function (comments) {
+            if (comments) {
+                res.status(200).json({ comments: comments });
+            } else {
+                res.status(404).json({ 'error': 'Post not found' });
+            }
+        }).catch(function (err) {
+            console.log(err);
+            res.status(500).json({ 'error': err });
+        });
 }
 
 exports.deleteComment = async (req, res) => {
@@ -59,19 +59,19 @@ exports.deleteComment = async (req, res) => {
     await models.User.findOne({
         where: { id: userId }
     }).then(async () => {
-        try{
-            const comment = await models.Comment.findOne({ where: { id: req.params.id }})
-            if (userId == comment.userId || isAdmin === true){
+        try {
+            const comment = await models.Comment.findOne({ where: { id: req.params.id } })
+            if (userId == comment.userId || isAdmin === true) {
                 await comment.destroy()
-                return res.json({ message : 'Comment removed' })
-            }else {
+                return res.json({ message: 'Comment removed' })
+            } else {
                 res.status(404).json({ 'error': 'Unable to verify user' });
             }
-        }catch (err) {
+        } catch (err) {
             return res.status(500).json({ 'error': err })
         }
     })
-    .catch(function(err) {
-        return res.status(500).json({ 'error': err })
-    });
+        .catch(function (err) {
+            return res.status(500).json({ 'error': err })
+        });
 }

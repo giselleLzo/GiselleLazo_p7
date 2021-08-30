@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE'
       },
       email: {
         allowNull: false,
@@ -21,6 +22,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       bio: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      profilePhoto: {
         allowNull: true,
         type: Sequelize.STRING
       },

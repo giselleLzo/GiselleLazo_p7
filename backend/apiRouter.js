@@ -33,7 +33,7 @@ app.use(cookieSession({
     cookie: {
         secure: true,
         httpOnly: true,
-        domain: 'http://localhost:8080',
+        domain: 'http://localhost:3000',
         expires: expiresDate
     }
 })

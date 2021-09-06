@@ -1,18 +1,20 @@
 <template>
-    <div>
-        <div id="globalContainer" class="container pt-lg-5">
+  <div>
+    <div class="container pt-lg-5">
       <div class="row mt-lg-5">
         <!-- Header -->
         <div class="col-12 col-lg-6">
           <div class="d-flex justify-content-center pt-5">
-            <a href="#"
-              ><img
-                src="../assets/logo.png"
+            <a href="#">
+              <img
+                src="@/assets/logo.png"
                 alt="Logo Groupomania"
                 width="250"
                 height="60"
-            /></a>
+              />
+            </a>
           </div>
+
           <div class="container">
             <div class="row pt-5">
               <div class="col mx-4">
@@ -31,9 +33,7 @@
                 <form class="bg-light rounded shadow-sm mb-5">
                   <div class="row justify-content-center pt-4">
                     <div class="form-group col-11">
-                      <label for="email" class="visually-hidden"
-                        >Adresse e-mail</label
-                      >
+                      <label for="email" class="visually-hidden">Adresse e-mail</label>
                       <input
                         v-model="email"
                         type="email"
@@ -43,10 +43,9 @@
                         required
                       />
                     </div>
+
                     <div class="form-group col-11 pt-2" v-if="mode == 'create'">
-                      <label for="username" class="visually-hidden"
-                        >Nom d'utilisateur</label
-                      >
+                      <label for="username" class="visually-hidden">Nom d'utilisateur</label>
                       <input
                         v-model="username"
                         type="text"
@@ -56,21 +55,20 @@
                         required
                       />
                     </div>
+
                     <div class="form-group col-11 pt-2" v-if="mode == 'create'">
                       <label for="bio" class="visually-hidden">Bio</label>
                       <textarea
                         v-model="bio"
                         name="bio"
                         class="form-control"
-                        rows="3"
+                        rows="2"
                         placeholder="Bio"
-                        required
                       ></textarea>
                     </div>
+
                     <div class="form-group col-11 pt-2">
-                      <label for="password" class="visually-hidden"
-                        >Mot de passe</label
-                      >
+                      <label for="password" class="visually-hidden">Mot de passe</label>
                       <input
                         v-model="password"
                         type="password"
@@ -81,8 +79,10 @@
                       />
                     </div>
                   </div>
+
                   <div class="col-10 offset-1 ft-font pt-2 text-center" v-if="mode == 'login' && status == 'error_login'">Adresse email ou mot de passe invalid(e)</div>
                   <div class="col-10 offset-1 ft-font pt-2 text-center" v-if="mode == 'create' && status == 'error_create'">Adresse email déjà utilisée</div>
+                  
                   <div class="d-grid gap-2 col-11 mx-auto">
                     <button
                       @click="login()"
@@ -138,22 +138,14 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-      <div class="bg-light fixed-bt">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <p class="ft-font text-center mt-3">Groupomania © 2021</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script>
 import {mapState} from 'vuex'
+import Footer from '@/components/Footer.vue';
+
 export default {
   name: 'Login',
   data: function () {
@@ -214,6 +206,10 @@ methods: {
       console.log(error);
     })
   },
- }
+  
+ },
+ components: {
+   Footer,
+  }, 
 }
 </script>

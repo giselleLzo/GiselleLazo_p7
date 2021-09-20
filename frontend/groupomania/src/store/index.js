@@ -14,7 +14,7 @@ if (!user) {
 }else {
     try {
         user = JSON.parse(user);
-        instance.defaults.headers.common['Authorization'] = user.token;
+        instance.defaults.headers.common['Authorization'] = 'Bearer ' + user.token;
     }catch (ex) {
         user = {
             userId: -1,
@@ -33,7 +33,7 @@ const store = createStore({
             bio: '',
             profilePhoto: '',
         },
-        posts: [],
+        messages: [],
         comments: [],
         users: [],
     },
@@ -70,7 +70,20 @@ const store = createStore({
             }
             localStorage.clear();
         },
-         
+        getPost: function (state, messages) {
+            state.messages = messages;
+        },
+        getComments: function (state, comments) {
+            state.comments = comments;
+        },
+        deletePost: function (state, post) {
+            let posts = state.posts.filter(p => p.id != post.id)
+            state.posts = posts;
+        },
+        deleteComment: function (state, comment) {
+            let comments = state.comments.filter(c => c.id != comment.id)
+            state.comments = comments;
+        }, 
     },
     actions: {
         login: ({commit}, userInfos) => {
@@ -102,6 +115,82 @@ const store = createStore({
                     reject(error);
                 });
             });
+        },
+        getUserInfos: ({commit}) => {
+            instance.get('/users/userId')
+            .then(function(response) {
+                commit('userInfos', response.data);
+            })
+            .catch(function () {
+
+            });
+        },
+        getUsers: ({commit}) => {
+            instance.get('/users')
+            .then (function(response) {
+                commit('getUsers', response.data)
+            })
+            .catch(function () {
+
+            })
+        },
+        deleteUser: ({commit}, user) => {
+            instance.delete(`/user/${user.id}`)
+            .then(function(response) {
+                if (response.status == 200 || response.status == 204)
+                commit('deleteUser', user.id)
+            })
+            .catch(function(err) {
+                console.log(err)
+            })
+        },
+        deleteAccount: ({commit}, user) => {
+            instance.delete(`/users/${user.id}`)
+            .then(function(response) {
+                if (response.status == 200 || response.status == 204)
+                commit('deleteAccount', user.id)
+            })
+            .catch(function(err) {
+                console.log(err)
+            })
+        },
+        getPostsInfos: ({commit}) => {
+            instance.get('/posts')
+            .then(function(response) {
+                commit('getPost', response.data.messages)
+            })
+            .catch(function() {
+
+            })
+        },
+        deletePost: ({commit}, post) => {
+            instance.delete(`/posts/${post.id}`)
+            .then(function(response) {
+                if (response.status == 200 || response.status == 204)
+                commit('deletePost', post.id)
+            })
+            .catch(function() {
+
+            })
+        },
+        getComments: ({commit}) => {
+            instance.get('/comments')
+            .then(function(response) {
+                commit('getComments', response.data.comments)
+            })
+            .catch(function() {
+
+            })
+        },
+        deleteComment: ({commit}, comment) => {
+            instance.delete(`/comments/${comment.id}`)
+            .then(function(response) {
+                if (response.status ==200 || response.status == 204)
+                commit('deleteComment', comment.id)
+            })
+            .catch(function() {
+
+            })
         },
     }
 })

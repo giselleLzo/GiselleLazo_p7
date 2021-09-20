@@ -2,7 +2,7 @@ import { createRouter, createWebHistory} from 'vue-router';
 import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
 import Profile from '@/views/Profile.vue';
-import Post from '@/components/Post.vue';
+import Posts from '@/components/Posts.vue';
 import ProfileDelete from '@/components/ProfileDelete.vue';
 import store from '../store/index'
 
@@ -33,9 +33,9 @@ const routes = [
             requiresAuth: true,
         },
     }, {
-        name: 'post',
-        path: '/post/:id',
-        component: Post,
+        name: 'posts',
+        path: '/posts/:id',
+        component: Posts,
         props: true,
         meta: {
             title: 'Post',
@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
     }else if (to.matched.some((routes) => routes.meta.requiresUser)) {
         if ((store.state.user.token)) {
             next({
-                name: 'home' || 'post' || 'profile',
+                name: 'home' || 'posts' || 'profile',
             });
         }else {
             next();

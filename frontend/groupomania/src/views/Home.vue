@@ -1,14 +1,14 @@
 <template>
     <div id="home">
        <Nav />
-       <Post />
+       <Posts />
        <Footer />
     </div>
 </template>
 
 <script>
 import Nav from '@/components/Nav.vue';
-import Post from '@/components/Post.vue';
+import Posts from '@/components/Posts.vue';
 import Footer from '@/components/Footer.vue';
 
 export default {
@@ -21,7 +21,7 @@ export default {
     name: 'Home',
     components: {
         Nav,
-        Post,
+        Posts,
         Footer,
     },
 };

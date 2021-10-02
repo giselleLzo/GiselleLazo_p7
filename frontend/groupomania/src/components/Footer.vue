@@ -17,3 +17,15 @@ export default {
    name: 'Footer',
 }
 </script>
+
+<style scoped>
+ @media (min-width: 992px) {
+  .fixed-bt {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+  }
+}
+</style>

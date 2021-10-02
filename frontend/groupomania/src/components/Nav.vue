@@ -26,11 +26,11 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-            <li class="nav-item" @click="switchToProfile()">
-              <a class="nav-link border-top">Profile</a>
-            </li>
             <li class="nav-item" @click="logout()"> 
               <a class="nav-link border-top">Déconnexion</a>
+            </li>
+            <li class="nav-item" @click="switchToIndex()">
+              <a class="nav-link border-top">Supprimer Compte</a>
             </li>
           </ul>
         </div>
@@ -40,21 +40,23 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+let user = localStorage.getItem('user')
 export default {
-  computed: {
-    ...mapState({
-      user: 'userInfos',
-    }),
-  },
+  name: 'Nav',
+  user: user,
   methods: {
     logout: function () {
-      this.$store.commit('logout');
+      user = {
+                userId: -1,
+                token: '',
+            }
+            localStorage.clear();
       this.$router.push('/');
     },
-    switchToProfile: function () {
-      this.$router.push('/profile')
-    }
+    switchToIndex: function () {
+      this.$router.push('/')
+    },
+    
   }
 }
 </script>

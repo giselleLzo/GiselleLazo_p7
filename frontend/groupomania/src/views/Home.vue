@@ -1,28 +1,21 @@
-<template>
-    <div id="home">
-       <Nav />
-       <Posts />
-       <Footer />
-    </div>
+ <template>
+  <div>
+    <Nav />
+    <Post />
+    <Wall />
+    <Footer />
+  </div>
 </template>
 
 <script>
-import Nav from '@/components/Nav.vue';
-import Posts from '@/components/Posts.vue';
-import Footer from '@/components/Footer.vue';
-
-export default {
-    created(){
-        this.$store.dispatch('getUsers');
-        this.$store.dispatch('getUserInfos');
-        this.$store.dispatch('getPostsInfos');
-        this.$store.dispatch('getComments');
-    },
+  import Nav from '@/components/Nav.vue'
+  import Post from '@/components/Post.vue'
+  import Wall from '@/components/Wall.vue'
+  import Footer from '@/components/Footer.vue'
+  export default {
     name: 'Home',
     components: {
-        Nav,
-        Posts,
-        Footer,
-    },
-};
+      Nav, Post, Wall, Footer
+    }
+  }
 </script>

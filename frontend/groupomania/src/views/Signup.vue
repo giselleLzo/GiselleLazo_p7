@@ -1,17 +1,18 @@
 <template>
   <div>
-    <LoginForm />
+    <SignForm />
     <Footer />
   </div>
 </template>
 
 <script>
-import LoginForm from '@/components/LoginForm.vue'
+import SignForm from '@/components/SignForm.vue'
 import Footer from '@/components/Footer.vue'
+
 export default {
-  name: 'Login',
+  name: 'Signup',
   components: {
-    LoginForm, Footer
+    SignForm, Footer
   }
 }
 </script>

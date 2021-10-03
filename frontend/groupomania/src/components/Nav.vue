@@ -29,8 +29,8 @@
             <li class="nav-item" @click="logout()"> 
               <a class="nav-link border-top">Déconnexion</a>
             </li>
-            <li class="nav-item" @click="switchToIndex()">
-              <a class="nav-link border-top">Supprimer Compte</a>
+            <li class="nav-item" v-bind="user" @click.prevent="deleteUser(userId)">
+              <a class="nav-link border-top" >Supprimer Compte</a>
             </li>
           </ul>
         </div>
@@ -40,10 +40,20 @@
 </template>
 
 <script>
-let user = localStorage.getItem('user')
+import axios from "axios";
+let user = localStorage.getItem('user');
 export default {
   name: 'Nav',
   user: user,
+  props: {
+      user: {}
+  },
+  data() {
+      return {
+          userId: localStorage.getItem('userId'),
+          token: localStorage.getItem('token')
+      }
+  },
   methods: {
     logout: function () {
       user = {
@@ -53,10 +63,16 @@ export default {
             localStorage.clear();
       this.$router.push('/');
     },
-    switchToIndex: function () {
-      this.$router.push('/')
-    },
-    
+    deleteUser(userId) {
+        axios.delete(`http://localhost:3000/api/users/${userId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer " + this.token
+                }
+            })
+            .then(() => this.$router.push('/signup'))
+    }
   }
 }
 </script>

@@ -28,40 +28,6 @@ exports.findAllUser = (req, res) => {
     .catch(error => res.status(400).json({ error }));
 }
 
-exports.updateProfile = async function(req, res) {
-    const headerAuth = req.headers['authorization'];
-    const userId = jwtUtils.getUserId(headerAuth);
-
-    if (userId < 0){
-        res.status(400).json({ 'error': 'invalid token' });
-    }
-
-    //Params
-    const username = req.body.username;
-    const bio = req.body.bio;
-
-    await models.User.findOne({
-        attributes: ['id', 'bio'],
-        where: {id: userId}
-    }).then(async function (userFound) {
-        if(userFound) {
-            await userFound.update({
-                username: (username ? username : userFound.username),
-                bio: (bio ? bio : userFound.bio), 
-            }).then(function() {
-                res.status(200).json({ message: 'Profile has been updated'})
-            }).catch( error => {
-                res.status(500).json({ error });
-            });
-        }else {
-            res.status(404).json({ 'error': 'Cannot find user' });
-        }
-    })
-    .catch(error => {
-        res.status(500).json({ error });
-    });
-}
-
 exports.deleteOneUser = async (req, res) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);

@@ -29,7 +29,7 @@
             <li class="nav-item" @click="logout()"> 
               <a class="nav-link border-top">Déconnexion</a>
             </li>
-            <li class="nav-item" v-bind="user" @click.prevent="deleteUser(userId)">
+            <li class="nav-item" v-if="user == user || user.isAdmin == 1" v-bind="user" @click.prevent="deleteUser(userId)">
               <a class="nav-link border-top" >Supprimer Compte</a>
             </li>
           </ul>
@@ -50,10 +50,31 @@ export default {
   },
   data() {
       return {
-          userId: localStorage.getItem('userId'),
+        userId: localStorage.getItem('userId'),
+            users: [],
+            
+                id: localStorage.getItem('userId'),
+                isAdmin: localStorage.getItem('isAdmin'),
+           
           token: localStorage.getItem('token')
       }
   },
+  created() {
+      
+      axios.get('http://localhost:3000/api/users/userId',
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": 'Bearer ' + this.token
+                    },
+                    id: localStorage.getItem('userId'),
+                })
+             .then(response => (this.users = response.data.users))
+            .catch(err => {
+                console.log(err + "Utilisateur non trouvé");
+            });
+    },
   methods: {
     logout: function () {
       user = {

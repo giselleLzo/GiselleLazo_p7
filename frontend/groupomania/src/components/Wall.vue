@@ -12,7 +12,7 @@
             </div>
             
             <div class="d-grid gap-2 col-6 mx-auto" >
-              <button v-bind="message" @click.prevent="deletePost(message.id)" class="btn btn-sm btn-danger my-3 fw-bold">
+              <button v-if="user.id == message.UserId || user.isAdmin == 1" v-bind="message" @click.prevent="deletePost(message.id)" class="btn btn-sm btn-danger my-3 fw-bold">
                 Supprimer le post
               </button>
             </div>
@@ -27,7 +27,7 @@
                 <p class="pt-3 mb-1">{{ comment.comment }}</p>
                 <small class="text-start pe-0 text-secondary" >publié par <span class="fw-bold">{{ comment.username }}</span></small>
                 <div class="d-grid gap-2 col-9 mx-auto" >
-                  <button v-bind="comment" @click.prevent="deleteComment(comment.id)" class="btn btn-sm btn-danger my-3 fw-bold">
+                  <button v-if="user.id == comment.UserId || user.isAdmin == 1" v-bind="comment" @click.prevent="deleteComment(comment.id)" class="btn btn-sm btn-danger my-3 fw-bold">
                     Supprimer le commentaire
                   </button>
                 </div>    

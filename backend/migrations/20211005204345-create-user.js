@@ -25,6 +25,10 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
+      profilePhoto: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       isAdmin: {
         allowNull: false,
         type: Sequelize.BOOLEAN

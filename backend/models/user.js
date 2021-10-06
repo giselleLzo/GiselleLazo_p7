@@ -57,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     bio: DataTypes.STRING,
+    profilePhoto: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN
   }, {
     sequelize,

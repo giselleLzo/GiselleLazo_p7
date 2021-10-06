@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="col-12 col-lg-6 offset-lg-3" v-for="post in posts.slice().reverse()" :key="post.id">
+    <div class="col-12 col-lg-6 offset-lg-3" v-for="message in messages.slice().reverse()" :key="message.id">
       <div class="container mt-1">
         <div class="row">
           <div class="col-10 offset-1 bg-light rounded shadow-sm mb-3">
-            <h3 class="pt-3 mb-0">{{ post.title }}</h3>
-            <small class="text-start pe-0 text-secondary" >publié par <span class="fw-bold">{{ post.username }}</span></small>
-            <p class="pt-3 mb-1">{{ post.content }}</p>
+            <h3 class="pt-3 mb-0">{{ message.title }}</h3>
+            <small class="text-start pe-0 text-secondary" >publié par <span class="fw-bold">{{ message.username }}</span></small>
+            <p class="pt-3 mb-1">{{ message.content }}</p>
             <div>
-              <img alt="image" class="col-12" :src="post.attachment" />
+              <img alt="image" class="col-12" :src="message.attachment" />
             </div>
             
             <div class="d-grid gap-2 col-6 mx-auto" >
-              <button v-bind="post" @click.prevent="deletePost(post.id)" class="btn btn-sm btn-danger my-3 fw-bold">
+              <button v-bind="message" @click.prevent="deletePost(message.id)" class="btn btn-sm btn-danger my-3 fw-bold">
                 Supprimer le post
               </button>
             </div>
@@ -23,7 +23,7 @@
 
             <div v-if="comments">
               <p class="mt-3 fw-bold">Commentaires:</p>
-              <div v-for="(comment) in comments.filter((comment) => { return comment.postId == post.id })" :key="comment.id">
+              <div v-for="(comment) in comments.filter((comment) => { return comment.messageId == message.id })" :key="comment.id">
                 <p class="pt-3 mb-1">{{ comment.comment }}</p>
                 <small class="text-start pe-0 text-secondary" >publié par <span class="fw-bold">{{ comment.username }}</span></small>
                 <div class="d-grid gap-2 col-9 mx-auto" >
@@ -34,7 +34,7 @@
               </div>    
             </div>
              
-            <postComment v-bind="$attrs"></postComment>
+            <postComment  ></postComment>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default {
         postComment
     },
     created() {
-        axios.get('http://localhost:3000/api/posts',
+        axios.get('http://localhost:3000/api/messages',
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default {
                         "Authorization": 'Bearer ' + this.token
                     }
                 })
-            .then(res => { this.posts = res.data.posts })
+            .then(res => { this.messages = res.data.messages })
             .catch(err => {
                 console.log(err + "Posts non trouvés");
             });
@@ -71,7 +71,7 @@ export default {
                         "Authorization": 'Bearer ' + this.token
                     }
                 })
-            .then(res => { this.comments = res.data.comments })
+            .then(res => (this.comments = res.data.comments))
             .catch(err => {
                 console.log(err + "Commentaires non trouvés");
             });
@@ -90,11 +90,14 @@ export default {
     },
     data() {
         return {
-            posts: [],
-            post: {},
+            messages: [],
+            message: {},
             comments: [],
-            comment: {},
-            postId: localStorage.getItem('postId'),
+            comment: {
+              username:"",
+              comment:""
+            },
+            messageId: localStorage.getItem('messageId'),
             userId: localStorage.getItem('userId'),
             users: [],
             user: {
@@ -106,7 +109,7 @@ export default {
     },
     methods: {
         deletePost(id) {
-            axios.delete(`http://localhost:3000/api/posts/${id}`,
+            axios.delete(`http://localhost:3000/api/messages/${id}`,
                     {
                         headers: {
                             'Content-Type': 'application/json',

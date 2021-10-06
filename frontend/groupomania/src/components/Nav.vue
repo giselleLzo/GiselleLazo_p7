@@ -71,7 +71,9 @@ export default {
                     "Authorization": "Bearer " + this.token
                 }
             })
-            .then(() => this.$router.push('/signup'))
+            .then(() => {
+              localStorage.clear();
+              this.$router.push('/signup')})
     }
   }
 }

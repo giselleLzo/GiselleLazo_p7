@@ -10,7 +10,7 @@ const nocache = require('nocache');
 //Routes
 const loginRoutes = require('./routes/login');
 const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/message');
+const messageRoutes = require('./routes/message');
 const commentRoutes = require('./routes/comment');
 
 const app = express();
@@ -50,7 +50,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', loginRoutes); //Enregistrer la route d'authentification 
 app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/api/comments', commentRoutes);
 
 module.exports = app;

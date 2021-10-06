@@ -7,9 +7,9 @@ exports.createComment = async (req, res, next) => {
     const headerAuth = await req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
 
-    const postId = req.params.id;
+    const messageId = req.params.id;
 
-    if (postId <= 0) {
+    if (messageId <= 0) {
         return res.status(400).json({ 'error': 'Invalid param' });
     }
 
@@ -22,7 +22,7 @@ exports.createComment = async (req, res, next) => {
             if (user) {
                 let newComment = await models.Comment.create({
                     userId: userId,
-                    postId: req.params.postId,
+                    messageId: req.params.messageId,
                     username: user.username,
                     comment: comment,
                 });
@@ -36,17 +36,15 @@ exports.createComment = async (req, res, next) => {
 }
 
 exports.getAllComment = (req, res) => {
-    models.Comment.findAll({
-        attributes: ['postId'],
+    models.Comment.findAll()
+    .then(function (comments) {
+        if (comments) {
+            res.status(200).json({ comments: comments });
+        } else {
+            res.status(404).json({ 'error': 'Post not found' });
+        }
     })
-        .then(function (comments) {
-            if (comments) {
-                res.status(200).json({ comments: comments });
-            } else {
-                res.status(404).json({ 'error': 'Post not found' });
-            }
-        }).catch(function (err) {
-            console.log(err);
+    .catch(function (err) {
             res.status(500).json({ 'error': err });
         });
 }

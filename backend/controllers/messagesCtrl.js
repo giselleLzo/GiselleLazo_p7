@@ -4,7 +4,7 @@ const fs = require('fs');
 
 //Création d'un message
 
-exports.createPost = async (req, res) => {
+exports.createMessage = async (req, res) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
 
@@ -19,14 +19,14 @@ exports.createPost = async (req, res) => {
     .then(async function(user) {
         if(user){
             let user = await models.User.findOne({ where: {id: userId} })
-            let newPost = await models.Message.create({
+            let newMessage = await models.Message.create({
                 title : title,
                 content : content,
                 attachment: attachment,
                 UserId : user.id,
                 username: user.username,
             });
-            return res.status(201).json({ newPost: newPost });
+            return res.status(201).json({ newMessage: newMessage });
         }else {
             res.status(404).json({ 'error': 'Cannot find user' });
         }
@@ -35,7 +35,7 @@ exports.createPost = async (req, res) => {
     });
 }
 
-exports.getOnePost = async (req, res) => {
+exports.findOneMessage = async (req, res) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
 
@@ -43,47 +43,43 @@ exports.getOnePost = async (req, res) => {
         attributes: ['id', 'title', 'username', 'userId', 'content', 'attachment', 'createdAt'],
         where: { id: req.params.id },
     })
-    .then(async function(post) {
+    .then(async function(message) {
         await models.User.findOne({
             attributes: ['username'],
             where: { id: userId }
         }).then(async function(user){
             await models.Comment.findAll({
                 attributes: ['comment', 'username', 'id', 'userId', ],
-                where: { postId: req.params.id },
+                where: { messageId: req.params.id },
             })
             .then(function (comments) {
-                const getComment = {post, comments}
+                const getComment = {message, comments}
                 res.status(200).json(getComment)
             }).catch(function(err) {
-                console.log(err);
                 res.status(500).json({ 'error': err });
             });
         }).catch(function(err) {
-            console.log(err);
             res.status(500).json({ 'error': err });
         });
     }).catch(function(err) {
-        console.log(err);
         res.status(500).json({ 'error': err});
     });
 }
 
-exports.getAllPost = (req, res) => {
+exports.findAllMessage = (req, res) => {
     models.Message.findAll()
-    .then(function(posts) {
-        if (posts) {
-            res.status(200).json({ posts: posts });
+    .then(function(messages) {
+        if (messages) {
+            res.status(200).json({ messages : messages });
         }else {
             res.status(404).json({ 'error': 'Cannot find post' });
         }
     }).catch(function(err) {
-        console.log(err);
         res.status(500).json({ 'error': err });
     });
 }
 
-exports.deletePost = async (req, res) => {
+exports.deleteOneMessage = async (req, res) => {
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
     const isAdmin = jwtUtils.getAdmin(headerAuth);
@@ -92,12 +88,12 @@ exports.deletePost = async (req, res) => {
         where: { id: userId }
     }).then( async () => {
         try {
-            const post = await models.Message.findOne({ where: { id: req.params.id }})
+            const message = await models.Message.findOne({ where: { id: req.params.id }})
         
-        if(userId == post.UserId || isAdmin === true){
-            const filename = post.attachment.split('/images/')[1];
+        if(userId == message.UserId || isAdmin === true){
+            const filename = message.attachment.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
-                post.destroy()
+                message.destroy()
                 return res.json({ message: 'Post removed'})
             });
         }else {

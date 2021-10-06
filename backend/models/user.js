@@ -11,7 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.User.hasMany(models.Message)
+      User.hasMany(models.Message, {
+        foreignKey: {
+          allowNull: false
+      },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
+    });
+    User.hasMany(models.Comment, {
+      foreignKey: {
+        allowNull: false
+    },
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
     }
   };
   User.init({
@@ -44,7 +57,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     bio: DataTypes.STRING,
-    profilePhoto: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN
   }, {
     sequelize,

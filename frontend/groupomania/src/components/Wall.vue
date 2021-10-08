@@ -34,7 +34,7 @@
               </div>    
             </div>
              
-            <postComment  ></postComment>
+            <postComment v-bind:messageId="message.id"></postComment>
           </div>
         </div>
       </div>

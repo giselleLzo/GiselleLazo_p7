@@ -3,25 +3,23 @@
     <div class="col-12">
       <div class="container mt-1 px-3">
         <div class="row mt-3">
-          <div v-bind="$attrs" class="col-12 mb-2">
-            <form>
+          <div class="col-12 mb-2">
+            <form id="formComment" @submit.prevent="postComment(messageId)">
               <div class="row justify-content-center">
                 <label for="comment" class="form-label visually-hidden">Commentaire</label>
                 <textarea
-                    v-bind="$attrs"
                     class="form-control"
                     name="comment"
-                    ref="comment"
+                    id="comment"
+                    v-model="comment"
                     placeholder="Écris un commentaire..."
                 ></textarea>
               </div>
               <div class="d-grid gap-2 col-5 mx-auto">
                 <button
-                  v-bind="$attrs"
                   type="submit"
                   class="btn btn-primary mt-3 mb-4 fw-bold"
-                  @click="postComment($attrs)"
-                  ref="comment"
+                  @click.prevent="postComment(messageId)"
                   >Publier
                 </button>
               </div>
@@ -38,28 +36,32 @@ import axios from "axios"
 export default {
     name: "postComment",
     data() {
-        return {
-            userId: localStorage.getItem('userId'),
-            token: localStorage.getItem('token'),
-            postId: "",
-            username: "",
-            comment: ""
-        }
+      return {
+        userId: localStorage.getItem('userId'),
+        token: localStorage.getItem('token'),
+        comment: '',
+        post: {},
+        title :""   
+      }
     },
+    props:['messageId'],
     methods: {
-        postComment() {
-            axios.post('http://localhost:3000/api/comments/:postId', {
-                    postId: this.$refs.comment.id,
-                    userId: localStorage.getItem('userId'),
-                    username: this.$refs.username.value,
-                    comment: this.$refs.comment.value,
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": 'Bearer ' + this.token
-                    }
-                })
-                .then(() => this.$router.go())
-        },
+        postComment(messageId) {
+        console.log(messageId)
+        let data = {
+          comment : this.comment
+        }
+        axios.post(`http://localhost:3000/api/comments/${messageId}` , data ,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": 'Bearer ' + this.token
+          }
+        })
+        .then(() => {
+          this.$router.go();
+        });
+        }
     }
 }
 </script>

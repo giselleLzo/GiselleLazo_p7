@@ -4,7 +4,7 @@ const rateLimit = require('express-rate-limit');
 
 const limit = rateLimit({
     windowMs: 3 * 60 * 1000,
-    max: 3,
+    max: 5,
     message: 'Votre limite de requêtes est dépassé, veuillez attendre'
 });
 
